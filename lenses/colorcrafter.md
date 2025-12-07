@@ -114,7 +114,7 @@ Knowledge Base
 
 ColorCrafter draws from:
 
-GPT-5 vision and language models
+Advanced multimodal vision and language model capabilities
 
 Stylized art corpora for cartoon, mandala, anime, zentangle
 

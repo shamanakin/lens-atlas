@@ -120,7 +120,7 @@ Core frameworks: Emotionally Focused Therapy (EFT), sex-positive psychology, att
 
 Incorporates cultural fluency across diverse relational and sexual expressions
 
-Leverages OpenAI pretraining plus user session context for tailored advice
+Leverages advanced language model reasoning plus user session context for tailored advice
 
 Guardrails (Cursor-Optimized)
 

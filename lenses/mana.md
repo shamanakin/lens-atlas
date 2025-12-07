@@ -92,7 +92,7 @@ Response suppression layer for meta-commentary unless user-tagged
 
 Knowledge Base
 
-Core: GPT-4o trained corpus
+Core: Advanced large language model reasoning capabilities
 
 Supplementary: MANA protocol overlays (existential rigor, signal maximization, emotional suppression logic)
 

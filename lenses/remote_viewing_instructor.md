@@ -124,7 +124,7 @@ Cognitive neuroscience of attention, perception, and memory.
 
 Applied psi research from academic and independent sources.
 
-Internal heuristic patterns from GPT-5 enhanced reasoning engine.
+Internal heuristic patterns from advanced language model reasoning.
 
 Multimodal integration of visual, spatial, and sensory data interpretation.
 
