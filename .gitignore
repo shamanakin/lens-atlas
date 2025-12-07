@@ -1,0 +1,10 @@
+# Lens Atlas gitignore
+
+# Private lenses can be excluded from public repos by:
+# 1) Moving them into lenses/private/
+# 2) Renaming them with a .private.md suffix
+
+lenses/private/**
+lenses/*.private.md
+
+
