@@ -110,3 +110,4 @@ These Lenses encode Matthew-specific frameworks, voice, or inner mapping and are
 This index is the single source of truth for your own visibility decisions; update it whenever you add, remove, or reclassify a Lens.
 
 
+

@@ -1,5 +1,7 @@
 # Lens Atlas
 
+![Lens Atlas System](assets/lens-atlas-infographic.png)
+
 The **Lens Atlas** is a file-based system for defining modular cognitive engines called **Lenses** (a coined term for this architecture) that can be loaded into any Cursor session. Each Lens is a self-contained specification describing purpose, identity, scope, methods, and guardrails, allowing you to switch or combine reasoning modes in a controlled way.
 
 ## What Lenses Are and Why They Exist
