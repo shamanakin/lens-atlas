@@ -1,150 +1,208 @@
 # Lens Atlas
 
-![Lens Atlas System](assets/lens-atlas-infographic.png)
+**Modular cognitive engines for AI agents.**
 
-The **Lens Atlas** is a file-based system for defining modular cognitive engines called **Lenses** (a coined term for this architecture) that can be loaded into any Cursor session. Each Lens is a self-contained specification describing purpose, identity, scope, methods, and guardrails, allowing you to switch or combine reasoning modes in a controlled way.
+---
 
-## What Lenses Are and Why They Exist
+## The Premise
 
-Lenses exist to make AI behavior **explicit, modular, and reusable**. Instead of burying logic in ad-hoc prompts, each Lens encodes a focused capability (e.g., planner, reviewer, researcher) with clear boundaries and safety constraints. This makes complex workflows easier to share, debug, and evolve.
+AI behavior is usually invisible—buried in system prompts, scattered across conversations, impossible to version or share.
 
-## How This Relates to CustomGPTs
+Lens Atlas makes it explicit. Each **Lens** is a self-contained specification that defines how an AI thinks: its purpose, identity, methods, guardrails, and activation protocol. Load a lens, and the agent transforms. Unload it, and it reverts.
 
-If you already build and use CustomGPTs, the Lens Atlas is essentially a way to:
+No magic. Just structured text files that agents read and follow.
 
-- **Embed that functionality directly into Cursor** using plain files, not a separate UI.
-- **Version, diff, and refactor** your “GPT logic” alongside code in Git.
-- **Stack and hot-swap** behaviors (e.g., planner + critic + note-compressor) instead of being locked into one CustomGPT at a time.
+---
 
-Conceptually:
+## What Lenses Are
 
-- A **CustomGPT** is a hosted configuration with instructions, tools, and memory bound to a single endpoint.
-- A **Lens** is that same idea, but expressed as a text file in your repo:
-  - lives next to your code and docs
-  - is editable in any editor
-  - can be loaded into any Cursor session via `Load lens: ./path/to/lens.md`.
+A Lens is a cognitive engine encoded in Markdown. It defines:
 
-If you’ve ever wanted to:
+- **Purpose**: What the lens exists to do
+- **Identity & Role**: Persona, tone, epistemic stance
+- **Scope of Competence**: What it does and doesn't do
+- **Core Methods**: How it thinks and acts
+- **Guardrails**: Safety rules, hallucination prevention, scope enforcement
+- **Activation Protocol**: What changes when loaded
 
-- reuse the same “persona” or reasoning style across multiple projects,
-- keep a **library of workflows** (planners, reviewers, briefers, generators) under version control,
-- or **mix and match** what a GPT can do on the fly inside your dev environment,
+Think of lenses as portable personalities with procedures. Unlike one-off prompts, they're:
 
-then the Lens Atlas gives you a simple, file-based way to do that without replacing your existing CustomGPTs. You can keep using CustomGPTs for hosted experiences while turning the best of those configs into Lenses for day-to-day work inside Cursor.
+- **Modular**: Use one lens, or stack several
+- **Reusable**: Apply the same lens across projects
+- **Versionable**: Track changes in Git like code
+- **Shareable**: Build a library, trade with others
 
-## Project Structure
+---
 
-- `core/` – Global standards, safety rules, and operational principles for all Lenses.
-- `lenses/` – Individual Lens definitions (one Lens per file, using the Lens Specification Template). You can optionally maintain:
-  - public Lenses (intended for sharing)
-  - personal or brand-internal Lenses (kept private via `.gitignore` rules or a `lenses/private/` folder).
-- `utilities/` – Integration guides and meta-Lenses (e.g., Parent Lens, combinator behavior, troubleshooting).
+## Philosophy
 
-See `lens_index.md` for an overview of all current Lenses and suggested visibility (public vs. personal/internal).
+### Explicit Over Implicit
 
-## Getting Started in Cursor
+Most AI behavior is a black box. Lens Atlas brings it into the open. Every capability, constraint, and procedure is written down, readable, and editable.
 
-The Lens Atlas is designed to sit **next to** whatever project you are actively working on in Cursor.
+### Composable Reasoning
 
-1. **Copy or clone** this folder into the root of a workspace you open in Cursor, for example:  
-   - `./GIT/lens-atlas/` (as in this repository), or  
-   - `./lens-atlas/` in the root of your project.
-2. Open your project in Cursor as usual; the Atlas files simply need to exist somewhere in the workspace tree.
-3. In any chat with Cursor, you can now **equip Lenses by file path or by name** (see below).
+Complex tasks need different thinking modes. A planning lens decomposes the problem. A writing lens drafts the output. A critic lens reviews it. Stack them, swap them, evolve them.
 
-## How to Load or Equip Lenses in Cursor
+### Files Are the Interface
 
-When working in Cursor with the Lens Atlas open, you can control behavior using Lens commands.
+No special tooling required. Lenses are Markdown files. Load them by referencing the path. The file system is the API.
 
-Canonical file-path command:
+### Safety by Design
 
-- **Load a Lens**:  
-  `Load lens: ./GIT/lens-atlas/lenses/example_lens.md`
+Every lens includes explicit guardrails—what it won't do, how it handles ambiguity, how it prevents hallucination. Safety isn't an afterthought; it's built into the specification.
 
-Natural-language aliases:
+---
 
-- **Equip a Lens** (alias for load):  
-  `Equip EXAMPLE_LENS`  
-  `Equip Coherence Builder lens`  
-  `Equip lenses: EXAMPLE_LENS, MANA`
+## How It Works
 
-Once equipped/loaded, Cursor should:
+### Load a Lens
 
-1. Read the Lens file.
-2. Adopt its identity, procedures, and constraints.
-3. Obey global safety rules in `core/global_safety.md`.
-4. Maintain fidelity to the active Lenses until they are unequipped or replaced.
+In Cursor (or any compatible LLM interface):
 
-To **unload / unequip** a Lens:
+```
+Load lens: ./lenses/example_lens.md
+```
 
-- `Unload lens: EXAMPLE_LENS`  
-- `Unequip EXAMPLE_LENS`  
-- `Unequip all lenses`
+Or use natural language:
 
-Cursor should then revert to baseline behavior (or to the remaining active Lenses, if any).
+```
+Equip MANA
+Equip Signal Architect lens
+Equip lenses: Lyra, TherapyNotes Forge
+```
 
-You can freely **stack** multiple Lenses; conflict resolution rules live in:
+### What Happens
 
+1. Agent reads the lens file
+2. Adopts its identity, methods, and constraints
+3. Obeys global safety rules in `core/global_safety.md`
+4. Maintains fidelity until unloaded
+
+### Unload
+
+```
+Unload lens: MANA
+Unequip all lenses
+```
+
+Agent reverts to baseline behavior.
+
+---
+
+## Structure
+
+```
+lens-atlas/
+├── README.md                 # You are here
+├── lens_index.md             # Browse all public lenses
+├── core/                     # Global standards and protocols
+│   ├── lens_specification.md # The canonical lens template
+│   ├── global_safety.md      # Safety rules for all lenses
+│   ├── atlas_protocol.md     # How the system works
+│   └── operational_principles.md
+├── lenses/                   # Individual lens definitions
+│   ├── example_lens.md       # Educational example with comments
+│   ├── mana.md
+│   ├── signal_architect.md
+│   └── ...
+└── utilities/                # Integration guides
+    ├── combinator.md         # Stacking multiple lenses
+    ├── parent_lens.md        # Hierarchy and conflict resolution
+    └── troubleshooting.md
+```
+
+---
+
+## Quick Start
+
+### 1. Clone or copy
+
+```bash
+git clone https://github.com/shamanakin/lens-atlas.git
+```
+
+### 2. Browse available lenses
+
+Open `lens_index.md` to see all public lenses with descriptions.
+
+### 3. Load your first lens
+
+```
+Load lens: ./lenses/example_lens.md
+```
+
+This loads an educational example (TASK_DECOMPOSER) with comments explaining each section.
+
+### 4. Build your own
+
+1. Copy `lenses/example_lens.md`
+2. Follow the structure in `core/lens_specification.md`
+3. Fill in purpose, identity, scope, methods, guardrails
+4. Save and load
+
+---
+
+## Featured Lenses
+
+| Lens | What It Does |
+|------|--------------|
+| **MANA** | High-cognition transmission with maximal signal density |
+| **Signal Architect** | Design custom GPT instructions with precision |
+| **Lyra** | Optimize prompts for better AI performance |
+| **TherapyNotes Forge** | Transform session notes into clinical documentation |
+| **Suno Prompt Crafter** | Generate production-ready music prompts |
+| **Super Self-Helper** | Interactive journaling with therapeutic structure |
+
+See `lens_index.md` for the complete list.
+
+---
+
+## Extracting Lenses from CustomGPTs
+
+If you already use CustomGPTs, you can convert them to lenses:
+
+1. Analyze the CustomGPT configuration (instructions, capabilities, limitations)
+2. Map its behavior into the Lens Specification Template
+3. Save as a new lens file
+4. Validate purpose, scope, and guardrails are clear
+
+This turns one-off configurations into reusable, versionable, stackable lenses.
+
+---
+
+## Stacking Lenses
+
+You can equip multiple lenses simultaneously:
+
+```
+Equip lenses: Signal Architect, MANA
+```
+
+Conflict resolution rules live in:
 - `core/global_safety.md`
-- `core/atlas_protocol.md`
 - `utilities/combinator.md`
 - `utilities/parent_lens.md`
 
-For most users, it is enough to think in terms of:
+General principle: more specific lenses override more general ones, but global safety rules always win.
 
-- **Equip one or more Lenses** for the current task.
-- **Unequip** them when you want to go back to a neutral, non-lensed mode.
+---
 
-## Building Your Own Lens (Quick Guide)
+## Origins
 
-The easiest path is:
+Lens Atlas is part of the BEOS (BrightEyed Operating System) ecosystem of AI-assisted productivity tools, alongside:
 
-1. **Copy `example_lens.md`** from `lenses/` and rename it, e.g. `my_new_lens.md`.
-2. Open `core/lens_specification.md` and use it as the canonical checklist for required sections.
-3. Fill in:
-   - **Purpose** – what this Lens is for (and not for).
-   - **Identity & Role** – persona, tone, epistemic stance.
-   - **Scope of Competence** – explicit DO / DO NOT.
-   - **Core Methods & Procedures** – how the Lens thinks and acts.
-   - **Guardrails** – safety, hallucination prevention, ambiguity rules.
-   - **Activation Protocol** – what changes when the Lens is equipped.
-   - **Meta-Directives** – strictness, initiative, conflict rules.
-4. Save it under `lenses/` (or `lenses/private/` if it is personal) and then:
-   - `Load lens: ./path/to/your/lens.md`
-   - or: `Equip MY_NEW_LENS`
+- **InfoHunter**: Research and discovery
+- **InkWell**: Long-form writing with voice preservation
 
-You can also **extract a Lens from an existing system prompt or CustomGPT**:
+It inherits the core philosophy: files are memory, English is code, transparency over magic.
 
-## Extracting a Lens from a CustomGPT
+---
 
-To convert a CustomGPT into a Lens:
+## License
 
-1. Analyze the CustomGPT configuration (instructions, capabilities, limitations).
-2. Map its behavior into the **Lens Specification Template** in `core/lens_specification.md`.
-3. Save it as a new Lens file in `lenses/`, e.g. `research_lens.md`.
-4. Validate that:
-   - Purpose, scope, and guardrails are clearly stated.
-   - Methods and activation behavior are unambiguous.
-   - Global safety rules are compatible and not violated.
+MIT. Use it, fork it, build your own atlas.
 
-This turns a one-off configuration into a reusable Lens compatible with the Lens Atlas.
+---
 
-## Basic Usage Examples
-
-- **Single-Lens session**
-  - `Load lens: ./GIT/lens-atlas/lenses/example_lens.md`  
-  - Then: "Using the active lens, plan my project to launch a simple landing page in four weeks."
-
-- **Swapping Lenses mid-session**
-  - `Unload lens: EXAMPLE_LENS`  
-  - `Load lens: ./GIT/lens-atlas/lenses/{other_lens}.md`
-
-- **From scratch with a new Lens**
-  - Create `./GIT/lens-atlas/lenses/my_new_lens.md` using the template.  
-  - `Load lens: ./GIT/lens-atlas/lenses/my_new_lens.md`  
-  - Interact according to the defined identity, scope, and guardrails.
-
-Keep each Lens focused, well-scoped, and compliant with the global safety rules so the Atlas remains predictable and safe as it grows.
-
-
-
+*Lens Atlas makes AI behavior explicit, modular, and evolvable. Load a lens, transform the agent, version the change.*

@@ -1,11 +1,11 @@
-# Lens Atlas gitignore
+# Personal/private lenses
+lenses/private/
 
-# Private lenses can be excluded from public repos by:
-# 1) Moving them into lenses/private/
-# 2) Renaming them with a .private.md suffix
+# OS files
+.DS_Store
+Thumbs.db
 
-lenses/private/**
-lenses/*.private.md
-
-
-
+# Editor files
+*.swp
+*.swo
+*~
